@@ -1,0 +1,27 @@
+{
+  "name": "tomasz.kania.orzel.me",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kaniaorzel/tomasz.kania.orzel.me.git"
+  },
+  "author": "kaniaorzel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kaniaorzel/tomasz.kania.orzel.me/issues"
+  },
+  "scripts": {
+    "build": "node-sass --include-path scss scss/main.scss public/css/main.css",
+    "watch": "nodemon -e scss -x \"npm run build\""
+  },
+  "homepage": "https://github.com/kaniaorzel/tomasz.kania.orzel.me#readme",
+  "devDependencies": {
+    "node-sass": "^4.14.1",
+    "nodemon": "^2.0.4"
+  }
+}
