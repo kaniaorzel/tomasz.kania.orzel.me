@@ -2,8 +2,8 @@
 
 ## Development
 
-1. Install `node`
-2. Run `npm install``
+1. Install `node >= 13.14`
+2. Run `npm install`
 3. Run `npm run watch`
 
 ## Build
