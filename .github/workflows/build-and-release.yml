@@ -19,3 +19,20 @@ jobs:
 
       - run: npm install
       - run: npm run build
+
+      - run: 'echo "$GH_ACTION_SSH_KEY" > gh_actions_key'
+        shell: bash
+        env:
+          GH_ACTION_SSH_KEY: ${{ secrets.GH_ACTION_SSH_KEY }}
+
+      - name: SCP builded page to server
+        shell: bash
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+        run: |
+          mkdir -p /home/runner/.ssh
+          chmod 600 gh_actions_key
+          ssh-keyscan orzel.me >> /home/runner/.ssh/known_hosts
+          ssh -i gh_actions_key tomekkania@orzel.me "rm -rf /home/tomekkania/www && mkdir -p /home/tomekkania/www"
+          scp -r  -i gh_actions_key ./public/* tomekkania@orzel.me:/home/tomekkania/www/
+          ssh -i gh_actions_key tomekkania@orzel.me "sudo rm -rf /var/www/tomasz.kania.orzel.me/*; sudo cp -r /home/tomekkania/www/* /var/www/tomasz.kania.orzel.me/"
