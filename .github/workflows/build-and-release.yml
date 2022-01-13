@@ -41,9 +41,12 @@ jobs:
         id: ipfs_setup
         uses: ibnesayeed/setup-ipfs@master
 
-      - name: Add files to IPFS
+      - name: Add files to IPFS and pin on Infura
+        env:
+          INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
+          INFURA_PROJECT_SECRET: ${{ secrets.INFURA_PROJECT_SECRET }}
         shell: bash
         run: |
-          ipfs cat ${{ steps.ipfs_setup.outputs.welcome_ref }}/readme
           export CID=$(ipfs add -r --cid-version 1 ./public | tail -1 | cut -d' ' -f2)
           echo "$CID"
+          curl -X POST "https://ipfs.infura.io:5001/api/v0/pin/add?arg=$CID" -u "$INFURA_PROJECT_ID:$INFURA_PROJECT_SECRET"
