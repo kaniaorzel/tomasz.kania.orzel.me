@@ -38,6 +38,7 @@ jobs:
           ssh -i gh_actions_key tomekkania@orzel.me "sudo rm -rf /var/www/tomasz.kania.orzel.me/*; sudo cp -r /home/tomekkania/www/* /var/www/tomasz.kania.orzel.me/"
 
       - name: Setup IPFS
+        id: ipfs_setup
         uses: ibnesayeed/setup-ipfs@master
 
       - name: Add files to IPFS
