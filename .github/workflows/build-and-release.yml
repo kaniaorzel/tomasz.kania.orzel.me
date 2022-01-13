@@ -40,6 +40,8 @@ jobs:
       - name: Setup IPFS
         id: ipfs_setup
         uses: ibnesayeed/setup-ipfs@master
+        with:
+          run_daemon: true
 
       - name: Add files to IPFS and pin on Infura
         env:
