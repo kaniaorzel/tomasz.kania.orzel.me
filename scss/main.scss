@@ -1,24 +1,26 @@
+$breakpoint-phone: 600px;
 $breakpoint-tablet: 1024px;
 
 * {
   font-family: "Martel";
-  color: #eee;
+  color: #111;
   box-sizing: border-box;
 }
 
 body {
-  background: #000;
-}
+  background: no-repeat url("../img/bg.jpg") 75% 20% #e8f1ec;
+  background-size: cover;
+  background-attachment: fixed;
 
-.video-bg {
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  min-width: 100%;
-  min-height: 100%;
-  z-index: -1;
-  opacity: 0.2;
-  pointer-events: none;
+  @media (max-width: $breakpoint-tablet) {
+    background-position: 30% 0%;
+    background-size: 466%;
+  }
+
+  @media (min-width: $breakpoint-phone) and (max-width: $breakpoint-tablet) {
+    background-position: 30% 20%;
+    background-size: 300%;
+  }
 }
 
 .me {
@@ -26,7 +28,7 @@ body {
   width: 100%;
   height: 300px;
   margin: 10vh auto 0 auto;
-  padding: 150px 30% 10px 10px;
+  padding: 150px 10px 10px 40%;
   position: relative;
 
   &__hello {
@@ -34,6 +36,15 @@ body {
     font-weight: normal;
     padding: 0;
     margin: 0 0 -10px 0;
+  }
+
+  &__logo {
+    width: 60px;
+    height: 60px;
+    display: inline-block;
+    margin-left: 15px;
+    position: relative;
+    top: 15px;
   }
 
   &__name {
@@ -45,11 +56,9 @@ body {
   }
 
   &__profile {
+    display: none;
     max-width: 40%;
-    float: right;
     position: absolute;
-    right: 0;
-    top: 0px;
   }
 
   &__intro {
@@ -75,21 +84,34 @@ body {
     }
   }
   @media (max-width: $breakpoint-tablet) {
-    margin: 300px auto 0 auto;
-    padding-right: 10px;
+    margin: 0px auto 0 auto;
+    padding: 20px;
+    position: static;
 
-    &__profile {
-      max-width: 300px;
-      width: 300px;
-      right: calc((100% - 300px) / 2);
-      top: -300px;
+    &__name {
+      font-size: 30px;
     }
 
+    &__intro {
+      font-size: 13px;
+      padding-top: 20px;
+    }
     &__icons {
+      background: rgba(0, 0, 0, 0.1);
+      position: absolute;
+      left: 10px;
+      bottom: 10px;
       &_img {
+        top: 10px;
         max-width: 60px;
         max-height: 60px;
       }
+    }
+  }
+
+  @media (min-width: $breakpoint-phone) and (max-width: $breakpoint-tablet) {
+    &__intro {
+      font-size: 20px;
     }
   }
 }

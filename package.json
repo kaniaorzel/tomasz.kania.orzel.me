@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "node-sass --include-path scss scss/main.scss public/css/main.css",
+    "watch": "nodemon -e scss -x \"npm run build\""
   },
   "repository": {
     "type": "git",
@@ -14,10 +15,6 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/kaniaorzel/tomasz.kania.orzel.me/issues"
-  },
-  "scripts": {
-    "build": "node-sass --include-path scss scss/main.scss public/css/main.css",
-    "watch": "nodemon -e scss -x \"npm run build\""
   },
   "homepage": "https://github.com/kaniaorzel/tomasz.kania.orzel.me#readme",
   "devDependencies": {
