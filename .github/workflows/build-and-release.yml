@@ -36,3 +36,13 @@ jobs:
           ssh -i gh_actions_key tomekkania@orzel.me "rm -rf /home/tomekkania/www && mkdir -p /home/tomekkania/www"
           scp -r  -i gh_actions_key ./public/* tomekkania@orzel.me:/home/tomekkania/www/
           ssh -i gh_actions_key tomekkania@orzel.me "sudo rm -rf /var/www/tomasz.kania.orzel.me/*; sudo cp -r /home/tomekkania/www/* /var/www/tomasz.kania.orzel.me/"
+
+      - name: Setup IPFS
+        uses: ibnesayeed/setup-ipfs@master
+
+      - name: Add files to IPFS
+        shell: bash
+        run: |
+          ipfs cat ${{ steps.ipfs_setup.outputs.welcome_ref }}/readme
+          export CID=$(ipfs add -r --cid-version 1 ./public | tail -1 | cut -d' ' -f2)
+          echo "$CID"
