@@ -32,13 +32,14 @@ jobs:
         shell: bash
         env:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+          SSH_USERNAME_HOSTNAME: ${{ secrets.SSH_USERNAME_HOSTNAME }}
         run: |
           mkdir -p /home/runner/.ssh
           chmod 600 gh_actions_key
           ssh-keyscan orzel.me >> /home/runner/.ssh/known_hosts
-          ssh -i gh_actions_key tomekkania@orzel.me "rm -rf /home/tomekkania/www && mkdir -p /home/tomekkania/www"
-          scp -r  -i gh_actions_key ./public/* tomekkania@orzel.me:/home/tomekkania/www/
-          ssh -i gh_actions_key tomekkania@orzel.me "sudo rm -rf /var/www/tomasz.kania.orzel.me/*; sudo cp -r /home/tomekkania/www/* /var/www/tomasz.kania.orzel.me/"
+          ssh -i gh_actions_key $SSH_USERNAME_HOSTNAME "rm -rf /home/tomekkania/www && mkdir -p /home/tomekkania/www"
+          scp -r  -i gh_actions_key ./public/* $SSH_USERNAME_HOSTNAME:/home/tomekkania/www/
+          ssh -i gh_actions_key $SSH_USERNAME_HOSTNAME "sudo rm -rf /var/www/tomasz.kania.orzel.me/*; sudo cp -r /home/tomekkania/www/* /var/www/tomasz.kania.orzel.me/"
 
       - name: Setup IPFS
         id: ipfs_setup
@@ -51,6 +52,7 @@ jobs:
           INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
           INFURA_PROJECT_SECRET: ${{ secrets.INFURA_PROJECT_SECRET }}
         shell: bash
+        id: ipfs_add
         run: |
           export CID=$(ipfs add -r --cid-version 1 ./public | tail -1 | cut -d ' ' -f2)
           echo "$CID"
@@ -65,8 +67,9 @@ jobs:
           workload_identity_provider: "projects/684338339288/locations/global/workloadIdentityPools/workload-pool/providers/workload-provider"
           service_account: "cloud-dns-service-account@agresso-pl-239805.iam.gserviceaccount.com"
 
-      - name: "Set up Cloud SDK"
+      - name: Set up Cloud SDK
         uses: "google-github-actions/setup-gcloud@v0"
 
-      - name: "Use gcloud CLI"
-        run: "gcloud info"
+      - name: Replace Zone with new IPFS CID
+        run: |
+          gcloud dns record-sets update _dnslink.ipfs.tomasz.kania.orzel.me. --rrdatas="dnslink=/ipfs/${{ steps.ipfs_add.outputs.CID }}" --type=TXT --ttl=60 --zone=zone-orzel-me
