@@ -49,7 +49,21 @@ jobs:
           INFURA_PROJECT_SECRET: ${{ secrets.INFURA_PROJECT_SECRET }}
         shell: bash
         run: |
-          export CID=$(ipfs add -r --cid-version 1 ./public | tail -1 | cut -d' ' -f2)
+          export CID=$(ipfs add -r --cid-version 1 ./public | tail -1 | cut -d ' ' -f2)
           echo "$CID"
           sleep 20
           curl -X POST --connect-timeout 30 -m 40 "https://ipfs.infura.io:5001/api/v0/pin/add?arg=$CID" -u "$INFURA_PROJECT_ID:$INFURA_PROJECT_SECRET"
+          echo "::set-output name=CID::$CID"
+
+      - name: GCloud Auth
+        uses: "google-github-actions/auth@v0"
+        id: gcloud_auth
+        with:
+          workload_identity_provider: "projects/684338339288/locations/global/workloadIdentityPools/workload-pool/providers/workload-provider"
+          service_account: "cloud-dns-service-account@agresso-pl-239805.iam.gserviceaccount.com"
+
+      - name: "Set up Cloud SDK"
+        uses: "google-github-actions/setup-gcloud@v0"
+
+      - name: "Use gcloud CLI"
+        run: "gcloud info"
