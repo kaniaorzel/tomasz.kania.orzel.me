@@ -39,7 +39,7 @@ jobs:
           export CID=$(ipfs add -r --cid-version 1 ./public | tail -1 | cut -d ' ' -f2)
           echo "$CID"
           sleep 20
-          curl -X POST --connect-timeout 30 -m 40 "https://ipfs.infura.io:5001/api/v0/pin/add?arg=$CID" -u "$INFURA_PROJECT_ID:$INFURA_PROJECT_SECRET"
+          curl -X POST --connect-timeout 120 -m 120 "https://ipfs.infura.io:5001/api/v0/pin/add?arg=$CID" -u "$INFURA_PROJECT_ID:$INFURA_PROJECT_SECRET"
           echo "::set-output name=CID::$CID"
 
       - name: GCloud Auth
