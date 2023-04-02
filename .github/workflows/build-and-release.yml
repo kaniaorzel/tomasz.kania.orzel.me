@@ -6,7 +6,7 @@ on:
 
 jobs:
   deploy:
-    name: Deploy website
+    name: Deploy website to IPFS
     runs-on: ubuntu-latest
     permissions:
       contents: "read"
@@ -22,24 +22,6 @@ jobs:
 
       - run: npm install
       - run: npm run build
-
-      - run: 'echo "$GH_ACTION_SSH_KEY" > gh_actions_key'
-        shell: bash
-        env:
-          GH_ACTION_SSH_KEY: ${{ secrets.GH_ACTION_SSH_KEY }}
-
-      - name: SCP builded page to server
-        shell: bash
-        env:
-          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-          SSH_USERNAME_HOSTNAME: ${{ secrets.SSH_USERNAME_HOSTNAME }}
-        run: |
-          mkdir -p /home/runner/.ssh
-          chmod 600 gh_actions_key
-          ssh-keyscan orzel.me >> /home/runner/.ssh/known_hosts
-          ssh -i gh_actions_key $SSH_USERNAME_HOSTNAME "rm -rf /home/tomekkania/www && mkdir -p /home/tomekkania/www"
-          scp -r  -i gh_actions_key ./public/* $SSH_USERNAME_HOSTNAME:/home/tomekkania/www/
-          ssh -i gh_actions_key $SSH_USERNAME_HOSTNAME "sudo rm -rf /var/www/tomasz.kania.orzel.me/*; sudo cp -r /home/tomekkania/www/* /var/www/tomasz.kania.orzel.me/"
 
       - name: Setup IPFS
         id: ipfs_setup
